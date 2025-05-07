@@ -11,9 +11,9 @@ class LaravelZoomServiceProvider extends ServiceProvider
     {
         $this->app->singleton('zoom', fn ($app): ZoomService => new ZoomService(
             config('zoom.base_url'),
+            config('zoom.account_id'),
             config('zoom.client_id'),
             config('zoom.client_secret'),
-            config('zoom.redirect_url')
         ));
     }
 
