@@ -7,11 +7,12 @@
     "authors": [
         {
             "name": "Nima Asaadi",
-            "email": "ni4.asadi.b@gmail.com"
+            "email": "aboutnima@icloud.com"
         }
     ],
     "require": {
-        "php": "^8.3.0"
+        "php": "^8.3.0",
+        "illuminate/support": "^11.0|^12.0"
     },
     "require-dev": {
         "laravel/pint": "^1.18.1",
@@ -24,6 +25,16 @@
     "autoload": {
         "psr-4": {
             "Aboutnima\\LaravelZoom\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aboutnima\\LaravelZoom\\LaravelZoomServiceProvider"
+            ],
+            "aliases": {
+                "Zoom": "Aboutnima\\LaravelZoom\\Facades\\Zoom"
+            }
         }
     },
     "autoload-dev": {
