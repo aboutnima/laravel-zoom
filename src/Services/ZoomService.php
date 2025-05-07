@@ -28,7 +28,7 @@ final class ZoomService implements ZoomServiceInterface
         $this->requestAccessToken();
     }
 
-    public function requestAccessToken(): void
+    private function requestAccessToken(): void
     {
         $cached = Cache::get(self::CACHE_KEY);
 

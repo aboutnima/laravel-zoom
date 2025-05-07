@@ -18,11 +18,6 @@ interface ZoomServiceInterface
     );
 
     /**
-     * Request a new access token from Zoom.
-     */
-    public function requestAccessToken(): void;
-
-    /**
      * Get the current access token.
      */
     public function getAccessToken(): string;
