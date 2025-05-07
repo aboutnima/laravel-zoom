@@ -1,6 +1,6 @@
 <?php
 
-use NunoMaduro\SkeletonPhp\Example;
+use Aboutnima\LaravelZoom\Example;
 
 it('foo', function (): void {
     $example = new Example;
