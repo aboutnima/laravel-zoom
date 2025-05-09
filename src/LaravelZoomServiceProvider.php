@@ -13,7 +13,7 @@ class LaravelZoomServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/zoom.php', 'zoom');
 
         // Register the ZoomService singleton
-        $this->app->singleton('zoom', fn ($app): ZoomService => new ZoomService(
+        $this->app->singleton('zoom', fn (): ZoomService => new ZoomService(
             config('zoom.base_url'),
             config('zoom.account_id'),
             config('zoom.client_id'),
