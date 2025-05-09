@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Aboutnima\LaravelZoom\Contracts\Services;
 
+use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Carbon\Carbon;
 
 interface ZoomServiceInterface
@@ -16,6 +17,26 @@ interface ZoomServiceInterface
         string $clientId,
         string $clientSecret
     );
+
+    /**
+     * Get the base URL for the Zoom API.
+     */
+    public function getBaseUrl(): string;
+
+    /**
+     * Get the account ID.
+     */
+    public function getAccountId(): string;
+
+    /**
+     * Get the client ID.
+     */
+    public function getClientId(): string;
+
+    /**
+     * Get the client secret.
+     */
+    public function getClientSecret(): string;
 
     /**
      * Get the current access token.
@@ -46,4 +67,19 @@ interface ZoomServiceInterface
      * Get the base API URL for Zoom.
      */
     public function getApiUrl(): string;
+
+    /**
+     * Send a request to the Zoom API.
+     */
+    public function sendRequest(
+        string $method,
+        string $endpoint,
+        array $query = [],
+        array $payload = []
+    );
+
+    /**
+     * Get the Zoom account service.
+     */
+    public function userService(): ZoomUserService;
 }

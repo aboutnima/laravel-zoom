@@ -4,19 +4,24 @@ declare(strict_types=1);
 namespace Aboutnima\LaravelZoom\Services;
 
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
+use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
-final class ZoomService implements ZoomServiceInterface
+class ZoomService implements ZoomServiceInterface
 {
     private const string CACHE_KEY = 'access_token';
 
     private string $accessToken = '';
+
     private string $tokenType = '';
+
     private string $scope = '';
+
     private string $apiUrl = '';
+
     private Carbon $expiresAt;
 
     public function __construct(
@@ -25,7 +30,86 @@ final class ZoomService implements ZoomServiceInterface
         private readonly string $clientId,
         private readonly string $clientSecret,
     ) {
+        Cache::forget(self::CACHE_KEY);
         $this->requestAccessToken();
+    }
+
+    public function default(): self
+    {
+        return $this;
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
+    }
+
+    public function getAccountId(): string
+    {
+        return $this->accountId;
+    }
+
+    public function getClientId(): string
+    {
+        return $this->clientId;
+    }
+
+    public function getClientSecret(): string
+    {
+        return $this->clientSecret;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->accessToken;
+    }
+
+    public function getTokenType(): string
+    {
+        return $this->tokenType;
+    }
+
+    public function getExpiresIn(): float
+    {
+        return now()->diffInSeconds($this->expiresAt);
+    }
+
+    public function getExpiresAt(): Carbon
+    {
+        return $this->expiresAt;
+    }
+
+    public function getScope(): string
+    {
+        return $this->scope;
+    }
+
+    public function getApiUrl(): string
+    {
+        return $this->apiUrl;
+    }
+
+    public function sendRequest(
+        string $method,
+        string $endpoint,
+        array $query = [],
+        array $payload = []
+    ): array {
+        try {
+            $response = $this
+                ->createRequest()
+                ->withQueryParameters($query)
+                ->{$method}($endpoint, $payload);
+
+            return $response->throw()->json();
+        } catch (RequestException $e) {
+            throw new \RuntimeException("Zoom API request failed: {$e->getMessage()}", 0, $e);
+        }
+    }
+
+    public function userService(): ZoomUserService
+    {
+        return new ZoomUserService($this);
     }
 
     private function requestAccessToken(): void
@@ -34,7 +118,7 @@ final class ZoomService implements ZoomServiceInterface
 
         /**
          * Check if a cached token exists and is still valid (not expired).
-         * If valid, reuse it; otherwise, make a new request.
+         * If valid, reuse it; otherwise, make a new request and refresh access token.
          */
         if (
             $cached &&
@@ -91,33 +175,11 @@ final class ZoomService implements ZoomServiceInterface
         }
     }
 
-    public function getAccessToken(): string
+    private function createRequest(): \Illuminate\Http\Client\PendingRequest
     {
-        return $this->accessToken;
-    }
-
-    public function getTokenType(): string
-    {
-        return $this->tokenType;
-    }
-
-    public function getExpiresIn(): float
-    {
-        return now()->diffInSeconds($this->expiresAt);
-    }
-
-    public function getExpiresAt(): Carbon
-    {
-        return $this->expiresAt;
-    }
-
-    public function getScope(): string
-    {
-        return $this->scope;
-    }
-
-    public function getApiUrl(): string
-    {
-        return $this->apiUrl;
+        return Http::withHeaders([
+            'Authorization' => "{$this->tokenType} {$this->accessToken}",
+            'Content-Type' => 'application/json',
+        ])->baseUrl($this->getApiUrl() . '/v2');
     }
 }
