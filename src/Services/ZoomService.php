@@ -30,7 +30,6 @@ final class ZoomService implements ZoomServiceInterface
         private readonly string $clientId,
         private readonly string $clientSecret,
     ) {
-        Cache::forget(self::CACHE_KEY);
         $this->requestAccessToken();
     }
 
@@ -120,6 +119,7 @@ final class ZoomService implements ZoomServiceInterface
          * Check if a cached token exists and is still valid (not expired).
          * If valid, reuse it; otherwise, make a new request and refresh access token.
          */
+
         if (
             $cached &&
             isset($cached['access_token'], $cached['expires_at']) &&
@@ -161,7 +161,7 @@ final class ZoomService implements ZoomServiceInterface
             // From cache
             $this->expiresAt = Carbon::parse($values['expires_at']);
         } else {
-            throw new \RuntimeException('Missing expires_at or expires_in for access token.');
+            throw new \RuntimeException('Missing `expires_at` or `expires_in` for access token.');
         }
 
         if ($updateCache) {
