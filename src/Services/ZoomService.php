@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
-class ZoomService implements ZoomServiceInterface
+final class ZoomService implements ZoomServiceInterface
 {
     private const string CACHE_KEY = 'access_token';
 
