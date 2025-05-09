@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Aboutnima\LaravelZoom\Services;
 
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\RequestException;
 
 final class ZoomService implements ZoomServiceInterface
 {
@@ -119,20 +120,20 @@ final class ZoomService implements ZoomServiceInterface
          * Check if a cached token exists and is still valid (not expired).
          * If valid, reuse it; otherwise, make a new request and refresh access token.
          */
-
         if (
             $cached &&
             isset($cached['access_token'], $cached['expires_at']) &&
             Carbon::parse($cached['expires_at'])->isFuture()
         ) {
             $this->setAccessToken($cached);
+
             return;
         }
 
         try {
             $response = Http::asForm()
                 ->withHeaders([
-                    'Authorization' => 'Basic ' . base64_encode("{$this->clientId}:{$this->clientSecret}"),
+                    'Authorization' => 'Basic '.base64_encode("{$this->clientId}:{$this->clientSecret}"),
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ])
                 ->post($this->baseUrl, [
@@ -141,7 +142,7 @@ final class ZoomService implements ZoomServiceInterface
                 ])
                 ->throw();
         } catch (RequestException $e) {
-            throw new \RuntimeException('Failed to get access token: ' . $e->getMessage(), 0, $e);
+            throw new \RuntimeException('Failed to get access token: '.$e->getMessage(), 0, $e);
         }
 
         $this->setAccessToken($response->json(), true);
@@ -180,6 +181,6 @@ final class ZoomService implements ZoomServiceInterface
         return Http::withHeaders([
             'Authorization' => "{$this->tokenType} {$this->accessToken}",
             'Content-Type' => 'application/json',
-        ])->baseUrl($this->apiUrl . '/v2');
+        ])->baseUrl($this->apiUrl.'/v2');
     }
 }
