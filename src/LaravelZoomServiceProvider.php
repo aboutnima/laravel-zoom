@@ -2,6 +2,7 @@
 
 namespace Aboutnima\LaravelZoom;
 
+use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Aboutnima\LaravelZoom\Services\ZoomService;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +20,12 @@ class LaravelZoomServiceProvider extends ServiceProvider
             config('zoom.client_id'),
             config('zoom.client_secret'),
         ));
+
+        // Register the ZoomUserService singleton
+        $this->app->singleton(
+            ZoomUserService::class,
+            fn ($app): ZoomUserService => new ZoomUserService($app->make('zoom'))
+        );
     }
 
     public function boot(): void

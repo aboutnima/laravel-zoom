@@ -180,6 +180,6 @@ final class ZoomService implements ZoomServiceInterface
         return Http::withHeaders([
             'Authorization' => "{$this->tokenType} {$this->accessToken}",
             'Content-Type' => 'application/json',
-        ])->baseUrl($this->getApiUrl() . '/v2');
+        ])->baseUrl($this->apiUrl . '/v2');
     }
 }
