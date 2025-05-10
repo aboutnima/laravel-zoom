@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aboutnima\LaravelZoom\Contracts\Services;
 
+use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Carbon\Carbon;
 
@@ -80,7 +81,12 @@ interface ZoomServiceInterface
     );
 
     /**
-     * Get the Zoom account service.
+     * Get the Zoom user service.
      */
     public function userService(): ZoomUserService;
+
+    /**
+     * Get the Zoom room service.
+     */
+    public function roomService(): ZoomRoomService;
 }

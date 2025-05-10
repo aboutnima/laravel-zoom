@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aboutnima\LaravelZoom\Services;
 
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
+use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
@@ -109,7 +110,12 @@ final class ZoomService implements ZoomServiceInterface
 
     public function userService(): ZoomUserService
     {
-        return new ZoomUserService($this);
+        return app(ZoomUserService::class);
+    }
+
+    public function roomService(): ZoomRoomService
+    {
+        return app(ZoomRoomService::class);
     }
 
     private function requestAccessToken(): void
