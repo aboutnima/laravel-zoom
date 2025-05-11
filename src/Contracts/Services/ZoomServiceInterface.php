@@ -7,6 +7,7 @@ namespace Aboutnima\LaravelZoom\Contracts\Services;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Carbon\Carbon;
+use Illuminate\Http\Client\Response;
 
 interface ZoomServiceInterface
 {
@@ -19,6 +20,11 @@ interface ZoomServiceInterface
         string $clientId,
         string $clientSecret
     );
+
+    /**
+     * Check if
+     */
+    public function isAuthenticated(): bool;
 
     /**
      * Get the base URL for the Zoom API.
@@ -78,7 +84,7 @@ interface ZoomServiceInterface
         string $endpoint,
         array $query = [],
         array $payload = []
-    );
+    ): Response;
 
     /**
      * Get the Zoom user service.

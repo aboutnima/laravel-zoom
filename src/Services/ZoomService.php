@@ -8,6 +8,7 @@ use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -95,14 +96,12 @@ final class ZoomService implements ZoomServiceInterface
         string $endpoint,
         array $query = [],
         array $payload = []
-    ): array {
+    ): Response {
         try {
-            $response = $this
+            return $this
                 ->createRequest()
                 ->withQueryParameters($query)
                 ->{$method}($endpoint, $payload);
-
-            return $response->throw()->json();
         } catch (RequestException $e) {
             throw new \RuntimeException("Zoom API request failed: {$e->getMessage()}", 0, $e);
         }
