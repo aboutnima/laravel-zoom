@@ -41,6 +41,37 @@ final class ZoomService implements ZoomServiceInterface
         return $this;
     }
 
+    public function isAuthenticated(): bool
+    {
+        // Helper closure to handle invalid authentication:
+        $invalidateAndReturnFalse = static function (): bool {
+            // Clears the cache and returns false
+            Cache::forget(self::CACHE_KEY);
+
+            return false;
+        };
+
+        // Retrieve the cached access token data
+        $cache = Cache::get(self::CACHE_KEY);
+
+        // Check if the cache is empty or null
+        if (blank($cache)) {
+            return $invalidateAndReturnFalse();
+        }
+
+        // Check if the token has expired
+        if (Carbon::parse($cache['expires_at'])->isPast()) {
+            return $invalidateAndReturnFalse();
+        }
+
+        // Check if the current access token matches the cached one
+        if (!isset($cache['access_token']) || $cache['access_token'] !== $this->getAccessToken()) {
+            return $invalidateAndReturnFalse();
+        }
+
+        return true;
+    }
+
     public function getBaseUrl(): string
     {
         return $this->baseUrl;
