@@ -139,12 +139,12 @@ final class ZoomService implements ZoomServiceInterface
         try {
             $response = Http::asForm()
                 ->withHeaders([
-                    'Authorization' => 'Basic '.base64_encode("{$this->clientId}:{$this->clientSecret}"),
+                    'Authorization' => 'Basic '.base64_encode("{$this->getClientId()}:{$this->getClientSecret()}"),
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ])
-                ->post($this->baseUrl, [
+                ->post($this->getBaseUrl(), [
                     'grant_type' => 'account_credentials',
-                    'account_id' => $this->accountId,
+                    'account_id' => $this->getAccountId(),
                 ])
                 ->throw();
         } catch (RequestException $e) {
@@ -185,8 +185,8 @@ final class ZoomService implements ZoomServiceInterface
     private function createRequest(): \Illuminate\Http\Client\PendingRequest
     {
         return Http::withHeaders([
-            'Authorization' => "{$this->tokenType} {$this->accessToken}",
+            'Authorization' => "{$this->getTokenType()} {$this->getAccessToken()}",
             'Content-Type' => 'application/json',
-        ])->baseUrl($this->apiUrl.'/v2');
+        ])->baseUrl($this->getApiUrl().'/v2');
     }
 }

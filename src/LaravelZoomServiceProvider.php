@@ -16,7 +16,7 @@ class LaravelZoomServiceProvider extends ServiceProvider
 
         // Register the ZoomService singleton
         $this->app->singleton('zoom', fn (): ZoomService => new ZoomService(
-            config('zoom.base_url'),
+            'https://zoom.us/oauth/token',
             config('zoom.account_id'),
             config('zoom.client_id'),
             config('zoom.client_secret'),
