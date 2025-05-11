@@ -65,7 +65,7 @@ final class ZoomService implements ZoomServiceInterface
         }
 
         // Check if the current access token matches the cached one
-        if (!isset($cache['access_token']) || $cache['access_token'] !== $this->getAccessToken()) {
+        if (! isset($cache['access_token']) || $cache['access_token'] !== $this->accessToken) {
             return $invalidateAndReturnFalse();
         }
 
@@ -169,12 +169,12 @@ final class ZoomService implements ZoomServiceInterface
         try {
             $response = Http::asForm()
                 ->withHeaders([
-                    'Authorization' => 'Basic '.base64_encode("{$this->getClientId()}:{$this->getClientSecret()}"),
+                    'Authorization' => 'Basic '.base64_encode("{$this->clientId}:{$this->clientSecret}"),
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ])
-                ->post($this->getBaseUrl(), [
+                ->post($this->baseUrl, [
                     'grant_type' => 'account_credentials',
-                    'account_id' => $this->getAccountId(),
+                    'account_id' => $this->accountId,
                 ])
                 ->throw();
         } catch (RequestException $e) {
@@ -215,8 +215,8 @@ final class ZoomService implements ZoomServiceInterface
     private function createRequest(): \Illuminate\Http\Client\PendingRequest
     {
         return Http::withHeaders([
-            'Authorization' => "{$this->getTokenType()} {$this->getAccessToken()}",
+            'Authorization' => "{$this->tokenType} {$this->accessToken}",
             'Content-Type' => 'application/json',
-        ])->baseUrl($this->getApiUrl().'/v2');
+        ])->baseUrl($this->apiUrl.'/v2');
     }
 }

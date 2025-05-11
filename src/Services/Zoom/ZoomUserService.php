@@ -6,6 +6,7 @@ namespace Aboutnima\LaravelZoom\Services\Zoom;
 
 use Aboutnima\LaravelZoom\Contracts\Services\Zoom\ZoomUserServiceInterface;
 use Aboutnima\LaravelZoom\Services\ZoomService;
+use Illuminate\Http\Client\Response;
 
 final readonly class ZoomUserService implements ZoomUserServiceInterface
 {
@@ -13,7 +14,7 @@ final readonly class ZoomUserService implements ZoomUserServiceInterface
         private ZoomService $zoomService,
     ) {}
 
-    public function getUsers(): array
+    public function getUsers(): Response
     {
         return $this->zoomService->sendRequest(
             'get',
@@ -21,7 +22,7 @@ final readonly class ZoomUserService implements ZoomUserServiceInterface
         );
     }
 
-    public function getUser(string $id): array
+    public function getUser(string $id): Response
     {
         return $this->zoomService->sendRequest(
             'get',

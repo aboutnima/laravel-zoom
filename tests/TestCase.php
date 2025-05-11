@@ -33,7 +33,7 @@ class TestCase extends Orchestra
     private function loadEnvironmentVariables(): void
     {
         // Load .env.testing from package root
-        if (file_exists(dirname(__DIR__) . '/.env.testing')) {
+        if (file_exists(dirname(__DIR__).'/.env.testing')) {
             $dotenv = Dotenv::createImmutable(dirname(__DIR__), '.env.testing');
             $dotenv->load();
         }
