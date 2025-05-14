@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Aboutnima\LaravelZoom\Services;
 
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
+use Aboutnima\LaravelZoom\Exceptions\ZoomAuthenticationException;
+use Aboutnima\LaravelZoom\Exceptions\ZoomRequestException;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Illuminate\Http\Client\RequestException;
@@ -134,7 +136,11 @@ final class ZoomService implements ZoomServiceInterface
                 ->withQueryParameters($query)
                 ->{$method}($endpoint, $payload);
         } catch (RequestException $e) {
-            throw new \RuntimeException("Zoom API request failed: {$e->getMessage()}", 0, $e);
+            if ($e->getCode() === 400) {
+                throw ZoomAuthenticationException::unauthenticated($e->getMessage());
+            }
+
+            throw ZoomRequestException::failed($e->getMessage());
         }
     }
 
@@ -178,7 +184,7 @@ final class ZoomService implements ZoomServiceInterface
                 ])
                 ->throw();
         } catch (RequestException $e) {
-            throw new \RuntimeException('Failed to get access token: '.$e->getMessage(), 0, $e);
+            throw ZoomAuthenticationException::tokenRequestFailed($e->getMessage());
         }
 
         $this->setAccessToken($response->json(), true);

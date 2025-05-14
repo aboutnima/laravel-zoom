@@ -1,9 +1,10 @@
 <?php
 
 use Aboutnima\LaravelZoom\Facades\Zoom;
+use Aboutnima\LaravelZoom\Services\ZoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
-use Aboutnima\LaravelZoom\Services\ZoomService;
+use Aboutnima\LaravelZoom\Exceptions\ZoomRequestException;
 use Illuminate\Support\Carbon;
 
 beforeEach(function (): void {
@@ -97,9 +98,9 @@ it('can call `users/me` endpoint via `sendRequest` method and receive 200 OK sta
         ->and($response->status())->toBe($fakeRequest->status());
 });
 
-//it('throws `RuntimeException` when Zoom request fails', function (): void {
-//    $this->zoom->sendRequest('get', '404');
-//})->throws(RuntimeException::class, 'Zoom API request failed');
+it('throws `RuntimeException` when Zoom request fails', function (): void {
+    $this->zoom->sendRequest('get', '404');
+})->throws(ZoomRequestException::class);
 
 it('`userService` method is exists', function (): void {
     expect(method_exists($this->zoom, 'userService'))->toBeTrue();
