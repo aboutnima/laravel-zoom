@@ -2,6 +2,7 @@
 
 namespace Aboutnima\LaravelZoom;
 
+use Aboutnima\LaravelZoom\Services\Zoom\ZoomMeetingService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Aboutnima\LaravelZoom\Services\ZoomService;
@@ -32,6 +33,12 @@ class LaravelZoomServiceProvider extends ServiceProvider
         $this->app->singleton(
             ZoomRoomService::class,
             fn ($app): ZoomRoomService => new ZoomRoomService($app->make('zoom'))
+        );
+
+        // Register the ZoomMeetingService singleton
+        $this->app->singleton(
+            ZoomMeetingService::class,
+            fn ($app): ZoomMeetingService => new ZoomMeetingService($app->make('zoom'))
         );
     }
 
