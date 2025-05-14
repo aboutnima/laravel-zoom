@@ -14,11 +14,28 @@ final readonly class ZoomMeetingService implements ZoomMeetingServiceInterface
         private ZoomService $zoomService,
     ) {}
 
-    public function getMeetings(): Response
+    public function getMeetings(string $userId = 'me'): Response
     {
         return $this->zoomService->sendRequest(
             'get',
-            'mettings',
+            "users/{$userId}/meetings",
+        );
+    }
+
+    public function getMeeting(string $meetingId): Response
+    {
+        return $this->zoomService->sendRequest(
+            'get',
+            "meetings/{$meetingId}",
+        );
+    }
+
+    public function createMeeting(array $payload, string $userId = 'me'): Response
+    {
+        return $this->zoomService->sendRequest(
+            method: 'post',
+            endpoint: "users/{$userId}/meetings",
+            payload: $payload,
         );
     }
 }
