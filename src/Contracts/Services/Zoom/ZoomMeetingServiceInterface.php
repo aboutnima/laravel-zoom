@@ -20,6 +20,6 @@ interface ZoomMeetingServiceInterface
 
     /**
      * Create a meeting for given user
-    */
+     */
     public function createMeeting(array $payload, string $userId = 'me'): Response;
 }

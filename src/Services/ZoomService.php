@@ -6,7 +6,7 @@ namespace Aboutnima\LaravelZoom\Services;
 
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
 use Aboutnima\LaravelZoom\Exceptions\ZoomAuthenticationException;
-use Aboutnima\LaravelZoom\Exceptions\ZoomRequestException;
+use Aboutnima\LaravelZoom\Exceptions\ZoomException;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Illuminate\Http\Client\RequestException;
@@ -131,16 +131,21 @@ final class ZoomService implements ZoomServiceInterface
         array $payload = []
     ): Response {
         try {
-            return $this
+            $response = $this
                 ->createRequest()
                 ->withQueryParameters($query)
                 ->{$method}($endpoint, $payload);
-        } catch (RequestException $e) {
-            if ($e->getCode() === 400) {
-                throw ZoomAuthenticationException::unauthenticated($e->getMessage());
+
+            $data = $response->collect();
+            $code = $data->get('code', $response->getStatusCode());
+
+            if ($code < 200 || $code >= 300) {
+                throw ZoomException::failed($data->get('message', 'Unknown error'));
             }
 
-            throw ZoomRequestException::failed($e->getMessage());
+            return $response;
+        } catch (RequestException $e) {
+            throw ZoomException::failed($e->getMessage());
         }
     }
 

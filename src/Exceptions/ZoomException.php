@@ -6,4 +6,10 @@ namespace Aboutnima\LaravelZoom\Exceptions;
 
 use RuntimeException;
 
-abstract class ZoomException extends RuntimeException {}
+final class ZoomException extends RuntimeException
+{
+    public static function failed(string $message): self
+    {
+        return new self("Zoom request failed: {$message}");
+    }
+}

@@ -1,10 +1,10 @@
 <?php
 
+use Aboutnima\LaravelZoom\Exceptions\ZoomException;
 use Aboutnima\LaravelZoom\Facades\Zoom;
-use Aboutnima\LaravelZoom\Services\ZoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
-use Aboutnima\LaravelZoom\Exceptions\ZoomRequestException;
+use Aboutnima\LaravelZoom\Services\ZoomService;
 use Illuminate\Support\Carbon;
 
 beforeEach(function (): void {
@@ -100,7 +100,7 @@ it('can call `users/me` endpoint via `sendRequest` method and receive 200 OK sta
 
 it('throws `RuntimeException` when Zoom request fails', function (): void {
     $this->zoom->sendRequest('get', '404');
-})->throws(ZoomRequestException::class);
+})->throws(ZoomException::class);
 
 it('`userService` method is exists', function (): void {
     expect(method_exists($this->zoom, 'userService'))->toBeTrue();
