@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aboutnima\LaravelZoom\Contracts\Services;
 
 use Aboutnima\LaravelZoom\Auth\ZoomTokenManager;
+use Aboutnima\LaravelZoom\Services\Zoom\ZoomMeetingService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Illuminate\Http\Client\Response;
@@ -35,4 +36,9 @@ interface ZoomServiceInterface
      * Get the ZoomRoomService.
      */
     public function roomService(): ZoomRoomService;
+
+    /**
+     * Get the ZoomMeetingService.
+     */
+    public function meetingService(): ZoomMeetingService;
 }

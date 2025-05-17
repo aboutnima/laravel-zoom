@@ -9,6 +9,14 @@ beforeEach(function (): void {
     $this->zoomTokenManager = app(ZoomTokenManager::class);
 });
 
+it('`requestAccessToken` method exists', function (): void {
+    expect(method_exists($this->zoomTokenManager, 'requestAccessToken'))->toBeTrue();
+});
+
+it('`setAccessToken` method exists', function (): void {
+    expect(method_exists($this->zoomTokenManager, 'setAccessToken'))->toBeTrue();
+});
+
 it('`isAuthenticated` method return false when `accessToken` is not cached', function (): void {
     $this->zoomTokenManager->clear();
 
