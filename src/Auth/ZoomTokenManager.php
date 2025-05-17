@@ -167,7 +167,7 @@ final class ZoomTokenManager implements ZoomTokenManagerInterface
         Cache::put(self::CACHE_KEY, [
             'access_token' => $this->accessToken,
             'token_type' => $this->tokenType,
-            'expires_at' => $this->expiresAt->toDateTimeString(),
+            'expires_at' => $this->expiresAt,
             'scope' => $this->scope,
             'api_url' => $this->apiUrl,
         ], $this->expiresAt);
