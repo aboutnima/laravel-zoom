@@ -39,7 +39,7 @@ it('throws `RuntimeException` when Zoom request fails', function (): void {
     )->toThrow(ZoomException::class);
 });
 
-//it('throws a `RuntimeException` when a Zoom request to a valid endpoint fails due to an invalid `access_token`', function (): void {
+// it('throws a `RuntimeException` when a Zoom request to a valid endpoint fails due to an invalid `access_token`', function (): void {
 //    /**
 //     * When the `clear` method is called on the `zoomTokenManager`, the `apiUrl` is reset to an empty string.
 //     * To avoid issues, the full endpoint must be passed to the `sendRequest` method,
@@ -51,7 +51,7 @@ it('throws `RuntimeException` when Zoom request fails', function (): void {
 //    expect(
 //        fn () => $this->zoom->sendRequest('get', $apiUrl.'/v2/users/me')
 //    )->toThrow(ZoomException::class);
-//});
+// });
 
 it('`userService` method is an instance of `ZoomUserService`', function (): void {
     expect($this->zoom->userService())->toBeInstanceOf(ZoomUserService::class);
