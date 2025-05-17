@@ -19,6 +19,11 @@ interface ZoomTokenManagerInterface
     );
 
     /**
+     * Get cache name
+     */
+    public function getCacheKey(): string;
+
+    /**
      * Clear token and forget cache
      */
     public function clear(): void;
@@ -61,7 +66,7 @@ interface ZoomTokenManagerInterface
     /**
      * Get the expiration date and time of the token.
      */
-    public function getExpiresAt(): Carbon;
+    public function getExpiresAt(): ?Carbon;
 
     /**
      * Get how long (in seconds as float) the token is valid for.

@@ -16,17 +16,16 @@ class LaravelZoomServiceProvider extends ServiceProvider
         // Merge the configuration file
         $this->mergeConfigFrom(__DIR__.'/../config/zoom.php', 'zoom');
 
-        // Register the ZoomService singleton and define TokenManager class with data
-        $this->app->singleton('zoom', function (): ZoomService {
-            $tokenManager = new ZoomTokenManager(
-                'https://zoom.us/oauth/token',
-                config('zoom.account_id'),
-                config('zoom.client_id'),
-                config('zoom.client_secret'),
-            );
+        // Register the ZoomTokenManager singleton
+        $this->app->singleton(ZoomTokenManager::class, fn (): ZoomTokenManager => new ZoomTokenManager(
+            'https://zoom.us/oauth/token',
+            config('zoom.account_id'),
+            config('zoom.client_id'),
+            config('zoom.client_secret'),
+        ));
 
-            return new ZoomService($tokenManager);
-        });
+        // Register the ZoomService singleton and define TokenManager class with data
+        $this->app->singleton('zoom', fn (): ZoomService => new ZoomService($this->app->make(ZoomTokenManager::class)));
 
         // Register the ZoomUserService singleton
         $this->app->singleton(

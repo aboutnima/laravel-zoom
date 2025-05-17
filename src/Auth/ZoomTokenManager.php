@@ -23,7 +23,7 @@ final class ZoomTokenManager implements ZoomTokenManagerInterface
 
     private string $apiUrl = '';
 
-    private Carbon $expiresAt;
+    private ?Carbon $expiresAt = null;
 
     public function __construct(
         private readonly string $baseUrl,
@@ -34,20 +34,26 @@ final class ZoomTokenManager implements ZoomTokenManagerInterface
         $this->requestAccessToken();
     }
 
-    public function default(): self
+    public function getCacheKey(): string
     {
-        return $this;
+        return self::CACHE_KEY;
     }
 
     public function clear(): void
     {
         Cache::forget(self::CACHE_KEY);
+
+        $this->accessToken = '';
+        $this->tokenType = '';
+        $this->scope = '';
+        $this->apiUrl = '';
+        $this->expiresAt = null;
     }
 
     public function isAuthenticated(): bool
     {
         // Helper closure to handle invalid authentication:
-        $invalidateAndReturnFalse = static function (): bool {
+        $invalidateAndReturnFalse = function (): bool {
             $this->clear();
 
             return false;
@@ -109,7 +115,7 @@ final class ZoomTokenManager implements ZoomTokenManagerInterface
         return now()->diffInSeconds($this->expiresAt);
     }
 
-    public function getExpiresAt(): Carbon
+    public function getExpiresAt(): ?Carbon
     {
         return $this->expiresAt;
     }
@@ -124,67 +130,46 @@ final class ZoomTokenManager implements ZoomTokenManagerInterface
         return $this->apiUrl;
     }
 
+    /**
+     * Retrieve and cache a new access token if the current one is missing or invalid.
+     * If a valid cached token exists, it will be reused.
+     */
     private function requestAccessToken(): void
     {
-        $cached = Cache::get(self::CACHE_KEY);
+        if (! $this->isAuthenticated()) {
+            try {
+                $response = Http::asForm()
+                    ->withHeaders([
+                        'Authorization' => 'Basic '.base64_encode("{$this->clientId}:{$this->clientSecret}"),
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                    ])
+                    ->post($this->baseUrl, [
+                        'grant_type' => 'account_credentials',
+                        'account_id' => $this->accountId,
+                    ])
+                    ->throw();
+            } catch (RequestException $e) {
+                throw ZoomException::failed($e->getMessage());
+            }
 
-        /**
-         * Check if a cached token exists and is still valid (not expired).
-         * If valid, reuse it; otherwise, make a new request and refresh access token.
-         */
-        if (
-            $cached &&
-            isset($cached['access_token'], $cached['expires_at']) &&
-            Carbon::parse($cached['expires_at'])->isFuture()
-        ) {
-            $this->setAccessToken($cached);
-
-            return;
+            $this->setAccessToken($response->json());
         }
-
-        try {
-            $response = Http::asForm()
-                ->withHeaders([
-                    'Authorization' => 'Basic '.base64_encode("{$this->clientId}:{$this->clientSecret}"),
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                ])
-                ->post($this->baseUrl, [
-                    'grant_type' => 'account_credentials',
-                    'account_id' => $this->accountId,
-                ])
-                ->throw();
-        } catch (RequestException $e) {
-            throw ZoomException::failed($e->getMessage());
-        }
-
-        $this->setAccessToken($response->json(), true);
     }
 
-    private function setAccessToken(array $values, bool $updateCache = false): void
+    private function setAccessToken(array $values): void
     {
         $this->accessToken = $values['access_token'];
         $this->tokenType = $values['token_type'];
         $this->scope = $values['scope'];
         $this->apiUrl = $values['api_url'];
+        $this->expiresAt = now()->addSeconds((int) $values['expires_in']);
 
-        if (isset($values['expires_in'])) {
-            // From fresh Zoom API response
-            $this->expiresAt = now()->addSeconds((int) $values['expires_in']);
-        } elseif (isset($values['expires_at'])) {
-            // From cache
-            $this->expiresAt = Carbon::parse($values['expires_at']);
-        } else {
-            throw new \RuntimeException('Missing `expires_at` or `expires_in` for access token.');
-        }
-
-        if ($updateCache) {
-            Cache::put(self::CACHE_KEY, [
-                'access_token' => $this->accessToken,
-                'token_type' => $this->tokenType,
-                'expires_at' => $this->expiresAt->toDateTimeString(),
-                'scope' => $this->scope,
-                'api_url' => $this->apiUrl,
-            ], $this->expiresAt);
-        }
+        Cache::put(self::CACHE_KEY, [
+            'access_token' => $this->accessToken,
+            'token_type' => $this->tokenType,
+            'expires_at' => $this->expiresAt->toDateTimeString(),
+            'scope' => $this->scope,
+            'api_url' => $this->apiUrl,
+        ], $this->expiresAt);
     }
 }

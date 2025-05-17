@@ -25,12 +25,9 @@ final readonly class ZoomService implements ZoomServiceInterface
         return $this;
     }
 
-    private function createRequest(): PendingRequest
+    public function tokenManager(): ZoomTokenManager
     {
-        return Http::withHeaders([
-            'Authorization' => "{$this->tokenManager->getTokenType()} {$this->tokenManager->getAccessToken()}",
-            'Content-Type' => 'application/json',
-        ])->baseUrl($this->tokenManager->getApiUrl().'/v2');
+        return $this->tokenManager;
     }
 
     public function sendRequest(
@@ -66,5 +63,13 @@ final readonly class ZoomService implements ZoomServiceInterface
     public function roomService(): ZoomRoomService
     {
         return app(ZoomRoomService::class);
+    }
+
+    private function createRequest(): PendingRequest
+    {
+        return Http::withHeaders([
+            'Authorization' => "{$this->tokenManager->getTokenType()} {$this->tokenManager->getAccessToken()}",
+            'Content-Type' => 'application/json',
+        ])->baseUrl($this->tokenManager->getApiUrl().'/v2');
     }
 }
