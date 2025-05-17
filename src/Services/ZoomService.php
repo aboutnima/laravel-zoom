@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aboutnima\LaravelZoom\Services;
 
-use Aboutnima\LaravelZoom\Auth\TokenManager;
+use Aboutnima\LaravelZoom\Auth\ZoomZoomTokenManager;
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
 use Aboutnima\LaravelZoom\Exceptions\ZoomException;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Http;
 final readonly class ZoomService implements ZoomServiceInterface
 {
     public function __construct(
-        private TokenManager $tokenManager
+        private ZoomZoomTokenManager $tokenManager
     ) {}
 
     private function createRequest(): PendingRequest

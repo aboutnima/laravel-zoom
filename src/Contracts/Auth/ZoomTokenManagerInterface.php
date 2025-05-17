@@ -6,7 +6,7 @@ namespace Aboutnima\LaravelZoom\Contracts\Auth;
 
 use Carbon\Carbon;
 
-interface TokenManagerInterface
+interface ZoomTokenManagerInterface
 {
     /**
      * ZoomService constructor.

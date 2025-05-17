@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Aboutnima\LaravelZoom\Auth;
 
-use Aboutnima\LaravelZoom\Contracts\Auth\TokenManagerInterface;
+use Aboutnima\LaravelZoom\Contracts\Auth\ZoomTokenManagerInterface;
 use Aboutnima\LaravelZoom\Exceptions\ZoomException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-final class TokenManager implements TokenManagerInterface
+final class ZoomZoomTokenManager implements ZoomTokenManagerInterface
 {
     private const string CACHE_KEY = 'access_token';
 
