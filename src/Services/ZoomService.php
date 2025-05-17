@@ -20,6 +20,11 @@ final readonly class ZoomService implements ZoomServiceInterface
         private ZoomZoomTokenManager $tokenManager
     ) {}
 
+    public function default(): self
+    {
+        return $this;
+    }
+
     private function createRequest(): PendingRequest
     {
         return Http::withHeaders([
