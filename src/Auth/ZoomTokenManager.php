@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-final class ZoomZoomTokenManager implements ZoomTokenManagerInterface
+final class ZoomTokenManager implements ZoomTokenManagerInterface
 {
     private const string CACHE_KEY = 'access_token';
 

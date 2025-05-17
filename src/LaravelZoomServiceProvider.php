@@ -2,7 +2,7 @@
 
 namespace Aboutnima\LaravelZoom;
 
-use Aboutnima\LaravelZoom\Auth\ZoomZoomTokenManager;
+use Aboutnima\LaravelZoom\Auth\ZoomTokenManager;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomMeetingService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
 use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
@@ -18,7 +18,7 @@ class LaravelZoomServiceProvider extends ServiceProvider
 
         // Register the ZoomService singleton and define TokenManager class with data
         $this->app->singleton('zoom', function (): ZoomService {
-            $tokenManager = new ZoomZoomTokenManager(
+            $tokenManager = new ZoomTokenManager(
                 'https://zoom.us/oauth/token',
                 config('zoom.account_id'),
                 config('zoom.client_id'),
