@@ -56,21 +56,6 @@ final readonly class ZoomService implements ZoomServiceInterface
         }
     }
 
-    public function userService(): ZoomUserService
-    {
-        return app(ZoomUserService::class);
-    }
-
-    public function roomService(): ZoomRoomService
-    {
-        return app(ZoomRoomService::class);
-    }
-
-    public function meetingService(): ZoomMeetingService
-    {
-        return app(ZoomMeetingService::class);
-    }
-
     private function createRequest(): PendingRequest
     {
         return Http::withHeaders([

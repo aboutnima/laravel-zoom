@@ -26,24 +26,6 @@ class LaravelZoomServiceProvider extends ServiceProvider
 
         // Register the ZoomService singleton and define TokenManager class with data
         $this->app->singleton('zoom', fn (): ZoomService => new ZoomService($this->app->make(ZoomTokenManager::class)));
-
-        // Register the ZoomUserService singleton
-        $this->app->singleton(
-            ZoomUserService::class,
-            fn ($app): ZoomUserService => new ZoomUserService($app->make('zoom'))
-        );
-
-        // Register the ZoomRoomService singleton
-        $this->app->singleton(
-            ZoomRoomService::class,
-            fn ($app): ZoomRoomService => new ZoomRoomService($app->make('zoom'))
-        );
-
-        // Register the ZoomMeetingService singleton
-        $this->app->singleton(
-            ZoomMeetingService::class,
-            fn ($app): ZoomMeetingService => new ZoomMeetingService($app->make('zoom'))
-        );
     }
 
     public function boot(): void

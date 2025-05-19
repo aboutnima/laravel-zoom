@@ -26,19 +26,4 @@ interface ZoomServiceInterface
         array $query = [],
         array $payload = []
     ): Response;
-
-    /**
-     * Get the ZoomUserService.
-     */
-    public function userService(): ZoomUserService;
-
-    /**
-     * Get the ZoomRoomService.
-     */
-    public function roomService(): ZoomRoomService;
-
-    /**
-     * Get the ZoomMeetingService.
-     */
-    public function meetingService(): ZoomMeetingService;
 }
