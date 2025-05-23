@@ -7,13 +7,11 @@ namespace Aboutnima\LaravelZoom\Services;
 use Aboutnima\LaravelZoom\Auth\ZoomTokenManager;
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
 use Aboutnima\LaravelZoom\Exceptions\ZoomException;
-use Aboutnima\LaravelZoom\Services\Zoom\ZoomMeetingService;
-use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
-use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Closure;
 
 final readonly class ZoomService implements ZoomServiceInterface
 {
@@ -35,7 +33,9 @@ final readonly class ZoomService implements ZoomServiceInterface
         string $method,
         string $endpoint,
         array $query = [],
-        array $payload = []
+        array $payload = [],
+        ?Closure $success = null,
+        ?Closure $error = null,
     ): Response {
         try {
             $response = $this
@@ -43,15 +43,21 @@ final readonly class ZoomService implements ZoomServiceInterface
                 ->withQueryParameters($query)
                 ->{$method}($endpoint, $payload);
 
-            $data = $response->collect();
-            $code = $data->get('code', $response->getStatusCode());
+            $statusCode = $response->getStatusCode();
 
-            if ($code < 200 || $code >= 300) {
-                throw ZoomException::failed($data->get('message', 'Unknown error'));
+            if ($statusCode >= 200 && $statusCode < 300) {
+                if (! is_null($success)) {
+                    $success($statusCode, $response);
+                }
+            } elseif (! is_null($error)) {
+                $error($statusCode, $response->collect()->get('message', 'Unknown error'), $response);
             }
 
             return $response;
         } catch (RequestException $e) {
+            if (! is_null($error)) {
+                $error(null, $e->getMessage(), null);
+            }
             throw ZoomException::failed($e->getMessage());
         }
     }

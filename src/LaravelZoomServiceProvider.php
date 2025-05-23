@@ -3,9 +3,6 @@
 namespace Aboutnima\LaravelZoom;
 
 use Aboutnima\LaravelZoom\Auth\ZoomTokenManager;
-use Aboutnima\LaravelZoom\Services\Zoom\ZoomMeetingService;
-use Aboutnima\LaravelZoom\Services\Zoom\ZoomRoomService;
-use Aboutnima\LaravelZoom\Services\Zoom\ZoomUserService;
 use Aboutnima\LaravelZoom\Services\ZoomService;
 use Illuminate\Support\ServiceProvider;
 
