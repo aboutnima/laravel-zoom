@@ -100,6 +100,8 @@ Contributions are welcome and appreciated!
 If you are a developer and interested in improving this package, feel free to fork the repository and submit a pull request.  
 Bug reports, feature suggestions, and improvements are all encouraged.
 
+Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 
 ## License
 
