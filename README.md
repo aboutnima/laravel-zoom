@@ -9,7 +9,7 @@ Laravel-Zoom is a lightweight and extensible package for integrating Zoom API fu
 Install the package using Composer:
 
 ```bash
-composer require aboutnima/laravel-zoom:^0.1.0@beta
+composer require aboutnima/laravel-zoom:^0.1.1@beta
 ```
 
 

@@ -2,7 +2,7 @@
     "name": "aboutnima/laravel-zoom",
     "description": "A Laravel package to integrate with the Zoom API using Server-to-Server OAuth. Easily create and manage meetings, users, and more.",
     "type": "library",
-    "version": "0.1.0-beta",
+    "version": "0.1.1-beta",
     "license": "MIT",
     "authors": [
         {
