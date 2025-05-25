@@ -30,6 +30,6 @@ class LaravelZoomServiceProvider extends ServiceProvider
         // Publish the configuration file
         $this->publishes([
             __DIR__.'/../config/zoom.php' => config_path('zoom.php'),
-        ]);
+        ], 'laravel-zoom-config');
     }
 }
