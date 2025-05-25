@@ -7,11 +7,11 @@ namespace Aboutnima\LaravelZoom\Services;
 use Aboutnima\LaravelZoom\Auth\ZoomTokenManager;
 use Aboutnima\LaravelZoom\Contracts\Services\ZoomServiceInterface;
 use Aboutnima\LaravelZoom\Exceptions\ZoomException;
+use Closure;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use Closure;
 
 final readonly class ZoomService implements ZoomServiceInterface
 {
@@ -44,20 +44,20 @@ final readonly class ZoomService implements ZoomServiceInterface
                 ->{$method}($endpoint, $payload);
 
             $statusCode = $response->getStatusCode();
+            $data = $response->collect();
 
             if ($statusCode >= 200 && $statusCode < 300) {
-                if (! is_null($success)) {
-                    $success($statusCode, $response);
-                }
-            } elseif (! is_null($error)) {
-                $error($statusCode, $response->collect()->get('message', 'Unknown error'), $response);
+                $success?->call($this, $statusCode, $data);
+
+                return $response;
             }
 
+            $error?->call($this, $statusCode, $data->get('message', 'Unknown error'), $data);
+
             return $response;
+
         } catch (RequestException $e) {
-            if (! is_null($error)) {
-                $error(null, $e->getMessage(), null);
-            }
+            $error?->call($this, null, $e->getMessage(), null);
             throw ZoomException::failed($e->getMessage());
         }
     }

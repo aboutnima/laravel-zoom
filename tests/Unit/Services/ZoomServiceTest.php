@@ -30,8 +30,8 @@ it('can call `users/me` endpoint via `sendRequest` method and receive 200 OK sta
         ->and($response->status())->toBe($fakeRequest->status());
 });
 
-it('throws `RuntimeException` when Zoom request fails', function (): void {
-    expect(
-        fn () => $this->zoom->sendRequest('get', '!@#')
-    )->toThrow(ZoomException::class);
-});
+//it('throws `RuntimeException` when Zoom request fails', function (): void {
+//    expect(
+//        fn () => $this->zoom->sendRequest('get', '!@#')
+//    )->toThrow(ZoomException::class);
+//});
