@@ -1,5 +1,7 @@
 # Laravel-Zoom
 
+**⚠️ This package is currently in beta. Breaking changes may still occur. Please use with caution in production environments.**
+
 Laravel-Zoom is a lightweight and extensible package for integrating Zoom API functionality into Laravel applications. It provides seamless authorization using OAuth (account-level apps) and a clean interface for sending authenticated requests to the Zoom API.
 
 ## Installation
@@ -9,6 +11,7 @@ Install the package using Composer:
 ```bash
 composer require aboutnima/laravel-zoom
 ```
+
 
 ## Configuration
 
@@ -37,6 +40,7 @@ return [
     'client_secret' => env('ZOOM_CLIENT_SECRET', ''),
 ];
 ```
+
 
 ## Usage Example
 
@@ -88,6 +92,13 @@ The following enhancements are planned for future versions of this package:
 
 - **Events and Listeners:**  
   The package will dispatch events for key actions (e.g., Zoom meeting created, request failed), allowing developers to hook into these events and add custom logic through listeners.
+
+
+## Contributing
+
+Contributions are welcome and appreciated!  
+If you are a developer and interested in improving this package, feel free to fork the repository and submit a pull request.  
+Bug reports, feature suggestions, and improvements are all encouraged.
 
 
 ## License
